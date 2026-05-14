@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://euronext.local/redteam/process-improvements/finding.schema.json",
+  "title": "Process evaluation finding",
+  "type": "object",
+  "required": [
+    "finding_id",
+    "evaluator",
+    "artefact",
+    "severity",
+    "title",
+    "evidence",
+    "recommendation"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "description": "Stable id: <evaluator-short>-<artefact-slug>-<3 digit seq>, e.g. lifecycle-methodology-v3-001"
+    },
+    "evaluator": {
+      "type": "string",
+      "enum": [
+        "engagement-lifecycle-review",
+        "tiber-dora-alignment",
+        "roe-authorization-review",
+        "attack-coverage",
+        "opsec-and-safety",
+        "reporting-quality",
+        "research-process-review",
+        "diagram-consistency",
+        "cross-doc-reconciler",
+        "corpus-coherence",
+        "physical-scope-review",
+        "purple-team-handover-review",
+        "threat-hunt-handover-review"
+      ]
+    },
+    "artefact": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string" },
+        "doc_type": {
+          "type": "string",
+          "enum": ["methodology", "engagement-sop", "research-process", "diagram", "policy", "template", "unknown"]
+        },
+        "engagement_type": {
+          "type": ["string", "null"],
+          "enum": ["exercise", "operation", "threat-scenario", "cross-cutting", null],
+          "description": "If the artefact is engagement-type-specific, identify which one. cross-cutting if it applies to all."
+        }
+      }
+    },
+    "section_ref": {
+      "type": ["string", "null"],
+      "description": "Heading path or page/slide/shape id where the finding was observed, e.g. '3.2 Initial Access' or 'diagram:shape-7'"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "informational"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "completeness-gap",
+        "regulatory-misalignment",
+        "ambiguity",
+        "internal-inconsistency",
+        "missing-control",
+        "missing-evidence",
+        "naming-convention",
+        "scope-gap",
+        "safety-or-opsec",
+        "improvement-opportunity"
+      ]
+    },
+    "title": { "type": "string", "maxLength": 140 },
+    "evidence": {
+      "type": "object",
+      "required": ["quote_or_observation"],
+      "properties": {
+        "quote_or_observation": { "type": "string" },
+        "expected": { "type": "string", "description": "What good looks like, in one sentence" }
+      }
+    },
+    "framework_refs": {
+      "type": "array",
+      "description": "Anchors so a reviewer can defend the finding.",
+      "items": {
+        "type": "object",
+        "required": ["framework", "ref"],
+        "properties": {
+          "framework": {
+            "type": "string",
+            "enum": [
+              "TIBER-EU",
+              "DORA-TLPT",
+              "DORA",
+              "MITRE-ATTACK",
+              "PTES",
+              "NIST-800-115",
+              "OSSTMM",
+              "CBEST",
+              "EURONEXT-INTERNAL",
+              "OTHER"
+            ]
+          },
+          "ref": { "type": "string", "description": "e.g. 'TIBER-EU v2 §4.3', 'DORA Art.26(2)', 'ATT&CK T1078', or internal control id" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["text"],
+      "properties": {
+        "text": { "type": "string" },
+        "effort": { "type": "string", "enum": ["S", "M", "L"] },
+        "owner_hint": { "type": "string", "description": "e.g. 'Red team lead', 'Threat intel', 'Legal/Risk', 'Purple team' " }
+      }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "Evaluator confidence in the finding given the evidence available"
+    }
+  }
+}

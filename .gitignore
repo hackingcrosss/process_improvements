@@ -1,0 +1,4 @@
+inputs/*
+workdir/*
+!workdir/.gitkeep
+!inputs/.gitkeep

@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 .claude/skills/process-ingest/docx_to_md.py:*)",
+      "Bash(python3 .claude/skills/process-ingest/pptx_to_md.py:*)",
+      "Bash(python3 .claude/skills/process-ingest/drawio_to_graph.py:*)",
+      "Bash(python3 .claude/skills/process-ingest/vsdx_to_graph.py:*)",
+      "Bash(python3 .claude/skills/process-ingest/select_inputs.py:*)",
+      "Bash(python3 .claude/skills/process-ingest/ingest_one.py:*)",
+      "Bash(mkdir -p workdir/*)",
+      "Bash(mkdir -p findings/*)",
+      "Bash(mkdir -p reports/*)",
+      "Bash(ls inputs)",
+      "Bash(ls inputs/*)",
+      "Bash(ls workdir)",
+      "Bash(ls workdir/*)",
+      "Bash(ls findings)",
+      "Bash(ls findings/*)",
+      "Bash(ls reports)",
+      "Bash(ls reports/*)",
+      "Bash(file inputs/*)",
+      "Bash(date +%Y-%m-%d-%H%M)",
+      "Bash(unzip -l:*)",
+      "Bash(pdftotext:*)",
+      "Bash(pandoc:*)"
+    ]
+  }
+}
