@@ -1,0 +1,20 @@
+{
+  "domain": "generic",
+  "description": "Generic document ingestion only. Add a domain config with evaluators for analysis.",
+  "selector": {
+    "script": ".claude/skills/document-ingest/select_inputs.py",
+    "args": ["inputs", "--domain", "generic"],
+    "policy": {
+      "keep_all_evaluable_documents": true,
+      "drop_drawio_renders_when_source_exists": true
+    }
+  },
+  "ingest": {
+    "skill": "document-ingest",
+    "script": ".claude/skills/document-ingest/ingest_one.py",
+    "args": ["--domain", "generic"]
+  },
+  "evaluators": [],
+  "corpus_evaluators": [],
+  "synthesizer": null
+}

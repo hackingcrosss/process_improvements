@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/document-analysis/cv-profile.schema.json",
+  "title": "CV profile extraction",
+  "type": "object",
+  "required": ["profile_id", "source", "candidate", "experience", "education", "skills", "warnings"],
+  "additionalProperties": false,
+  "properties": {
+    "profile_id": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["path"],
+      "additionalProperties": true,
+      "properties": {
+        "path": { "type": "string" },
+        "slug": { "type": "string" },
+        "doc_type": { "type": "string" },
+        "language": { "type": ["string", "null"] }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"] },
+        "email": { "type": ["string", "null"] },
+        "phone": { "type": ["string", "null"] },
+        "location": { "type": ["string", "null"] },
+        "links": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "summary": { "type": ["string", "null"] },
+    "experience": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/experience_item" }
+    },
+    "education": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/education_item" }
+    },
+    "certifications": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/named_item" }
+    },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/skill_item" }
+    },
+    "languages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/named_item" }
+    },
+    "projects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/named_item" }
+    },
+    "publications": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/named_item" }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["quote_or_observation"],
+      "additionalProperties": true,
+      "properties": {
+        "section_ref": { "type": ["string", "null"] },
+        "quote_or_observation": { "type": "string" },
+        "page": { "type": ["integer", "string", "null"] }
+      }
+    },
+    "date_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": ["string", "null"], "description": "YYYY-MM if known" },
+        "end": { "type": ["string", "null"], "description": "YYYY-MM if known; null for present/current" },
+        "raw": { "type": ["string", "null"] },
+        "is_current": { "type": "boolean" }
+      }
+    },
+    "experience_item": {
+      "type": "object",
+      "required": ["title", "organization", "date_range", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": ["string", "null"] },
+        "organization": { "type": ["string", "null"] },
+        "location": { "type": ["string", "null"] },
+        "date_range": { "$ref": "#/$defs/date_range" },
+        "summary": { "type": ["string", "null"] },
+        "achievements": { "type": "array", "items": { "type": "string" } },
+        "technologies": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "education_item": {
+      "type": "object",
+      "required": ["institution", "credential", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "institution": { "type": ["string", "null"] },
+        "credential": { "type": ["string", "null"] },
+        "field": { "type": ["string", "null"] },
+        "date_range": { "$ref": "#/$defs/date_range" },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "named_item": {
+      "type": "object",
+      "required": ["name", "evidence"],
+      "additionalProperties": true,
+      "properties": {
+        "name": { "type": "string" },
+        "issuer": { "type": ["string", "null"] },
+        "date": { "type": ["string", "null"] },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    },
+    "skill_item": {
+      "type": "object",
+      "required": ["name", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "category": { "type": ["string", "null"] },
+        "level_claimed": { "type": ["string", "null"] },
+        "evidence": { "$ref": "#/$defs/evidence" }
+      }
+    }
+  }
+}

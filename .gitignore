@@ -1,4 +1,9 @@
 inputs/*
 workdir/*
+reports/*
+analysis/*
+
 !workdir/.gitkeep
 !inputs/.gitkeep
+!reports/.gitkeep
+!analysis/.gitkeep

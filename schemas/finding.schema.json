@@ -1,7 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://euronext.local/redteam/process-improvements/finding.schema.json",
-  "title": "Process evaluation finding",
+  "$id": "https://local/document-analysis/finding.schema.json",
+  "title": "Document analysis finding",
+  "description": "Domain-neutral finding contract. Domain evaluators may use specialized schemas for structured products and this schema for issue/risk/gap findings.",
   "type": "object",
   "required": [
     "finding_id",
@@ -18,43 +19,36 @@
       "type": "string",
       "description": "Stable id: <evaluator-short>-<artefact-slug>-<3 digit seq>, e.g. lifecycle-methodology-v3-001"
     },
+    "domain": {
+      "type": "string",
+      "description": "Optional analysis domain, e.g. process, cv, contract, policy"
+    },
     "evaluator": {
       "type": "string",
-      "enum": [
-        "engagement-lifecycle-review",
-        "tiber-dora-alignment",
-        "roe-authorization-review",
-        "attack-coverage",
-        "opsec-and-safety",
-        "reporting-quality",
-        "research-process-review",
-        "diagram-consistency",
-        "cross-doc-reconciler",
-        "corpus-coherence",
-        "physical-scope-review",
-        "purple-team-handover-review",
-        "threat-hunt-handover-review"
-      ]
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Evaluator/skill name. Kept open so new domains can add evaluators without editing the base schema."
     },
     "artefact": {
       "type": "object",
       "required": ["path"],
+      "additionalProperties": true,
       "properties": {
         "path": { "type": "string" },
-        "doc_type": {
-          "type": "string",
-          "enum": ["methodology", "engagement-sop", "research-process", "diagram", "policy", "template", "unknown"]
-        },
+        "domain": { "type": "string" },
+        "doc_family": { "type": "string" },
+        "doc_type": { "type": "string" },
+        "document_kind": { "type": "string" },
         "engagement_type": {
           "type": ["string", "null"],
-          "enum": ["exercise", "operation", "threat-scenario", "cross-cutting", null],
-          "description": "If the artefact is engagement-type-specific, identify which one. cross-cutting if it applies to all."
-        }
+          "description": "Process-domain compatibility field, e.g. exercise, operation, threat-scenario, cross-cutting."
+        },
+        "candidate_id": { "type": "string" },
+        "job_id": { "type": "string" }
       }
     },
     "section_ref": {
       "type": ["string", "null"],
-      "description": "Heading path or page/slide/shape id where the finding was observed, e.g. '3.2 Initial Access' or 'diagram:shape-7'"
+      "description": "Heading path, page, slide, shape id, or other locator where the finding was observed."
     },
     "severity": {
       "type": "string",
@@ -62,51 +56,30 @@
     },
     "category": {
       "type": "string",
-      "enum": [
-        "completeness-gap",
-        "regulatory-misalignment",
-        "ambiguity",
-        "internal-inconsistency",
-        "missing-control",
-        "missing-evidence",
-        "naming-convention",
-        "scope-gap",
-        "safety-or-opsec",
-        "improvement-opportunity"
-      ]
+      "description": "Domain-specific category, e.g. completeness-gap, privacy, job-match, internal-inconsistency."
     },
     "title": { "type": "string", "maxLength": 140 },
     "evidence": {
       "type": "object",
       "required": ["quote_or_observation"],
+      "additionalProperties": true,
       "properties": {
         "quote_or_observation": { "type": "string" },
-        "expected": { "type": "string", "description": "What good looks like, in one sentence" }
+        "expected": { "type": "string", "description": "What good looks like, in one sentence" },
+        "source": { "type": "string" },
+        "page": { "type": ["integer", "string", "null"] }
       }
     },
     "framework_refs": {
       "type": "array",
-      "description": "Anchors so a reviewer can defend the finding.",
+      "description": "Anchors so a reviewer can defend the finding. Framework names are open for domain-specific references.",
       "items": {
         "type": "object",
         "required": ["framework", "ref"],
+        "additionalProperties": true,
         "properties": {
-          "framework": {
-            "type": "string",
-            "enum": [
-              "TIBER-EU",
-              "DORA-TLPT",
-              "DORA",
-              "MITRE-ATTACK",
-              "PTES",
-              "NIST-800-115",
-              "OSSTMM",
-              "CBEST",
-              "EURONEXT-INTERNAL",
-              "OTHER"
-            ]
-          },
-          "ref": { "type": "string", "description": "e.g. 'TIBER-EU v2 §4.3', 'DORA Art.26(2)', 'ATT&CK T1078', or internal control id" },
+          "framework": { "type": "string" },
+          "ref": { "type": "string" },
           "note": { "type": "string" }
         }
       }
@@ -114,16 +87,25 @@
     "recommendation": {
       "type": "object",
       "required": ["text"],
+      "additionalProperties": true,
       "properties": {
         "text": { "type": "string" },
         "effort": { "type": "string", "enum": ["S", "M", "L"] },
-        "owner_hint": { "type": "string", "description": "e.g. 'Red team lead', 'Threat intel', 'Legal/Risk', 'Purple team' " }
+        "owner_hint": { "type": "string", "description": "e.g. Red team lead, Recruiter, Hiring manager, Legal/Risk" }
       }
     },
     "confidence": {
       "type": "string",
       "enum": ["high", "medium", "low"],
       "description": "Evaluator confidence in the finding given the evidence available"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "related_ids": {
+      "type": "array",
+      "items": { "type": "string" }
     }
   }
 }

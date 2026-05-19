@@ -1,0 +1,45 @@
+# Starter CV skills taxonomy. Curate per hiring domain.
+# Aliases help match job descriptions to CV wording without assuming equivalence beyond the listed terms.
+status: draft
+
+skills:
+  python:
+    canonical: Python
+    aliases: ["Python 3", "py"]
+    category: programming
+  javascript:
+    canonical: JavaScript
+    aliases: ["JS", "ECMAScript"]
+    category: programming
+  typescript:
+    canonical: TypeScript
+    aliases: ["TS"]
+    category: programming
+  kubernetes:
+    canonical: Kubernetes
+    aliases: ["K8s"]
+    category: cloud-native
+  active-directory:
+    canonical: Active Directory
+    aliases: ["AD", "Microsoft AD", "Windows domain"]
+    category: identity
+  aws:
+    canonical: Amazon Web Services
+    aliases: ["AWS"]
+    category: cloud
+  azure:
+    canonical: Microsoft Azure
+    aliases: ["Azure"]
+    category: cloud
+  incident-response:
+    canonical: Incident Response
+    aliases: ["IR", "security incident response"]
+    category: cybersecurity
+  red-teaming:
+    canonical: Red Teaming
+    aliases: ["red team", "adversary simulation"]
+    category: cybersecurity
+  threat-hunting:
+    canonical: Threat Hunting
+    aliases: ["hunt", "hypothesis-driven hunting"]
+    category: cybersecurity

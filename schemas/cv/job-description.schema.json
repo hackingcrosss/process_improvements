@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/document-analysis/job-description.schema.json",
+  "title": "Job description extraction",
+  "type": "object",
+  "required": ["job_id", "title", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "job_id": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "source_path": { "type": ["string", "null"] },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["requirement_id", "text", "importance"],
+        "additionalProperties": false,
+        "properties": {
+          "requirement_id": { "type": "string" },
+          "text": { "type": "string" },
+          "importance": { "type": "string", "enum": ["must-have", "nice-to-have", "responsibility", "other"] },
+          "category": { "type": ["string", "null"] },
+          "evidence": {
+            "type": "object",
+            "properties": {
+              "section_ref": { "type": ["string", "null"] },
+              "quote_or_observation": { "type": "string" }
+            },
+            "required": ["quote_or_observation"],
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

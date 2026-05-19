@@ -1,11 +1,11 @@
 ---
 name: process-ingest
-description: Convert a red team process artefact (.docx, .pdf, .pptx, .vsdx, .drawio, .png/.jpg/.svg) into a normalized form (markdown for prose / slide decks, JSON node-edge graph for diagrams, vision-extracted captions for images) under workdir/<artefact-slug>/. Run this before any evaluator skill.
+description: Compatibility wrapper for document-ingest with `--domain process`. Converts red team process artefacts into normalized content under workdir/<artefact-slug>/ and writes process hints into meta.json. Run this before process evaluator skills.
 ---
 
 # When to use
 
-Use this skill as the first step when a user asks to evaluate a process document or diagram, or when called by `/evaluate`. Output is written to `workdir/<artefact-slug>/` and is consumed by all evaluator skills.
+Use this skill as the first step when a user asks to evaluate a process document or diagram, or when called by `/evaluate`. This skill now delegates to the domain-neutral `document-ingest` layer and passes the `process` domain hint. Output is written to `workdir/<artefact-slug>/` and is consumed by all process evaluator skills.
 
 # Inputs and outputs
 
@@ -17,11 +17,13 @@ Use this skill as the first step when a user asks to evaluate a process document
   - `captions.md` — for raster images, a vision-derived structured caption (actors, flows, trust boundaries, decision points).
   - `meta.json` — `{ "source_path", "doc_type_guess", "engagement_type_guess", "tooling_used", "warnings": [] }`.
 
-`doc_type_guess` is one of: `methodology`, `engagement-sop`, `research-process`, `diagram`, `policy`, `template`, `unknown`.
-`engagement_type_guess` is one of: `exercise`, `operation`, `threat-scenario`, `cross-cutting`, `unknown`.
+For process compatibility, top-level `doc_type_guess` is one of: `methodology`, `engagement-sop`, `research-process`, `diagram`, `policy`, `template`, `unknown`.
+Top-level `engagement_type_guess` is one of: `exercise`, `operation`, `threat-scenario`, `cross-cutting`, `unknown`.
+The same values are also available under `domain_hints.process` in the generic `document-ingest` metadata.
 
 # Procedure
 
+0. **Delegate to generic ingest when using the CLI.** Prefer `python3 .claude/skills/document-ingest/ingest_one.py <input> --domain process`. The legacy `process-ingest/ingest_one.py` wrapper already does this.
 1. **Resolve workdir.** Compute slug, create `workdir/<slug>/` if missing.
 2. **Pick a path based on extension:**
    - `.docx` → run `python3 .claude/skills/process-ingest/docx_to_md.py <input> <workdir>` to produce `content.md`. If pandoc is available, prefer `pandoc -f docx -t gfm` and reconcile.

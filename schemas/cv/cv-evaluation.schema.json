@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/document-analysis/cv-evaluation.schema.json",
+  "title": "CV job-match evaluation",
+  "type": "object",
+  "required": ["evaluation_id", "candidate_profile_id", "requirements", "summary", "interview_questions"],
+  "additionalProperties": false,
+  "properties": {
+    "evaluation_id": { "type": "string" },
+    "candidate_profile_id": { "type": "string" },
+    "job": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "job_id": { "type": ["string", "null"] },
+        "title": { "type": ["string", "null"] },
+        "source_path": { "type": ["string", "null"] },
+        "rubric_path": { "type": ["string", "null"] }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["overall_assessment", "strengths", "unclear_items", "not_evidenced_items"],
+      "additionalProperties": false,
+      "properties": {
+        "overall_assessment": { "type": "string", "description": "Evidence-based narrative, not an opaque score." },
+        "strengths": { "type": "array", "items": { "type": "string" } },
+        "unclear_items": { "type": "array", "items": { "type": "string" } },
+        "not_evidenced_items": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/requirement_match" }
+    },
+    "interview_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "question": { "type": "string" },
+          "rationale": { "type": "string" },
+          "related_requirement_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["quote_or_observation"],
+      "additionalProperties": true,
+      "properties": {
+        "source": { "type": "string" },
+        "section_ref": { "type": ["string", "null"] },
+        "quote_or_observation": { "type": "string" }
+      }
+    },
+    "requirement_match": {
+      "type": "object",
+      "required": ["requirement_id", "requirement_text", "importance", "match_status", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "requirement_id": { "type": "string" },
+        "requirement_text": { "type": "string" },
+        "importance": { "type": "string", "enum": ["must-have", "nice-to-have", "responsibility", "other"] },
+        "match_status": { "type": "string", "enum": ["strong_match", "partial_match", "unclear", "not_evidenced"] },
+        "rationale": { "type": "string" },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+        "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+      }
+    }
+  }
+}

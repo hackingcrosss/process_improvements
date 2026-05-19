@@ -1,0 +1,18 @@
+# Example rubric. Copy and adapt per role.
+status: draft
+role_id: example-role
+role_title: Example role
+
+requirements:
+  - id: must-001
+    text: Demonstrated professional experience relevant to the role.
+    importance: must-have
+    weight: null
+  - id: nice-001
+    text: Evidence of working with cross-functional stakeholders.
+    importance: nice-to-have
+    weight: null
+
+scoring_policy:
+  use_numeric_score: false
+  notes: "Prefer evidence matrix and interview questions over opaque scores unless a validated weighting model exists."

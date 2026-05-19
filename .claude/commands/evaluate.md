@@ -7,9 +7,11 @@ argument-hint: "[<filename in inputs/> | all]"
 
 You are running the Euronext red team **process evaluation pipeline**.
 
+This is the process-domain wrapper around the generic `/analyze process ...` architecture. The domain config is `.claude/domains/process.json`; ingestion is handled by the domain-neutral `document-ingest` layer with `--domain process`.
+
 ## Argument handling
 
-- If `$ARGUMENTS` is empty or `all`, build the candidate list by running `python3 .claude/skills/process-ingest/select_inputs.py inputs` and parsing the JSON output. Evaluate everything in `selected[]`.
+- If `$ARGUMENTS` is empty or `all`, build the candidate list by running `python3 .claude/skills/document-ingest/select_inputs.py inputs --domain process` and parsing the JSON output. Evaluate everything in `selected[]`.
 - Otherwise treat `$ARGUMENTS` as a single filename inside `inputs/` and evaluate **exactly** that file — selection rules do not apply when a specific file is named.
 
 ## Selection rules (applied in `all` mode only)
@@ -27,7 +29,7 @@ The helper also returns `excluded[]` with a reason per dropped file. **Always in
 
 For each artefact:
 
-1. **Ingest.** Invoke the `process-ingest` skill. Wait for `workdir/<slug>/meta.json` to be written. If the ingest reports unrecoverable failure, record it and skip the evaluators for this artefact.
+1. **Ingest.** Invoke the `document-ingest` skill with `--domain process` (or the compatibility `process-ingest` wrapper). Wait for `workdir/<slug>/meta.json` to be written. If the ingest reports unrecoverable failure, record it and skip the evaluators for this artefact.
 
 2. **Run evaluators in parallel** (independent — emit them in a single message with multiple tool calls):
    - `engagement-lifecycle-review`
